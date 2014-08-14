@@ -10,7 +10,7 @@ Author URI: http://Devework.com/
 */
 
 /**
-* 实验性质：添加psot-meta标签 -Start
+* 实验性质：添加post-meta标签 -Start
 * @since 8.14
 */
 function mobile_custom_meta_box() {     
