@@ -2,11 +2,115 @@
 /*
 Plugin Name: DW Mobile Switcher
 Plugin URI: http://Devework.com/
-Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2014.3.11)
+Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2014.8.14)
 Version: 1.0
 Author: Jeff
 Author URI: http://Devework.com/
 @ Thanks to mg12’s WP Mobile themes plugin.
+*/
+
+/**
+* 实验性质：添加psot-meta标签 -Start
+* @since 8.14
+*/
+function mobile_custom_meta_box() {     
+    add_meta_box(     
+        'mobile_custom_meta_box', // $id     
+        '移动主题编辑相关（非必填）', //  显示meta_box标题   
+        'mobile_show_custom_meta_box', // 命名回调函数    
+        'post', //  选择发布类型   
+        'normal', // $context     
+        'high'); //  权限   
+} 
+add_action('add_meta_boxes', 'mobile_custom_meta_box');
+
+$prefix = 'mobile_';   
+  $custom_meta_fields = array(  //初始化数组 
+    array(     
+          'label'=> '外链特色图像',//标记label名
+          'id'    => 'thumb',  //custom_text 为输入框标记唯一的id名  
+          'desc'  => '输入图片的url，支持外链。即可优先显示（不填亦可）',//输入框描述 
+          'type'  => 'text' //选择输入类型   
+      ),
+    /*
+    array(     
+          'label'=> '文章来源文字',//标记label名
+          'id'    => 'f',  //custom_text 为输入框标记唯一的id名  
+          'desc'  => '如果是转载文章，请输入来源的站点或网站名（需要主题设置开启显示来源方可有效）',//输入框描述 
+          'type'  => 'text' //选择输入类型   
+      ),
+    array(     
+          'label'=> '文章来源链接',//标记label名
+          'id'    => 'furl',  //custom_text 为输入框标记唯一的id名  
+          'desc'  => '如果是转载文章，请输入来源链接（需要主题设置开启显示来源方可有效）',//输入框描述 
+          'type'  => 'text' //选择输入类型   
+      ),*/
+  );     
+
+function mobile_show_custom_meta_box() {     
+global $custom_meta_fields, $post;     
+//   添加即时验证函数   
+echo '<input type="hidden" name="custom_meta_box_nonce" value="'.wp_create_nonce(basename(__FILE__)).'" />';     
+         
+    //  开始循环出metabox 输入框   
+    echo '<table class="form-table">';     
+    foreach ($custom_meta_fields as $field) {  //对之前存储在变量$custom_meta_fields中的数组进行遍历   
+            
+        $meta = get_post_meta($post->ID, $field['id'], true);  //提取出每个字段的id   
+        echo '<tr>    
+                <th><label for="'.$field['id'].'">'.$field['label'].'</label></th>    
+                <td>';     
+                switch($field['type']) {  //遍历输入框类型   
+                        // text    
+    case 'text':     
+        echo '<input type="text" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="30" />    
+            <br /><span class="description">'.$field['desc'].'</span>';     
+    break;     
+       
+        // textarea     
+    case 'textarea':     
+        echo '<textarea name="'.$field['id'].'" id="'.$field['id'].'" cols="60" rows="4">'.$meta.'</textarea>    
+            <br /><span class="description">'.$field['desc'].'</span>';     
+    break;                                  
+                }    
+        echo '</td></tr>';     
+    } // end foreach     
+    echo '</table>'; // end table            
+}   
+
+function mobile_save_custom_meta_box($post_id) {     
+      global $custom_meta_fields;     
+           
+  //验证刚才创建的即时验证函数      
+      if (!wp_verify_nonce($_POST['custom_meta_box_nonce'], basename(__FILE__)))   
+          return $post_id;     
+      //   检查自动存储   
+      if (defined('DOING_AUTOSAVE') && DOING_AUTOSAVE)     
+          return $post_id;     
+      // 检查发布权限是否对应发布类型   
+      if ('page' == $_POST['post_type']) {     
+          if (!current_user_can('edit_page', $post_id))     
+              return $post_id;     
+          } elseif (!current_user_can('edit_post', $post_id)) {     
+              return $post_id;     
+      }     
+           
+      // 通过字段循环存储数据   
+      foreach ($custom_meta_fields as $field) {     
+          $old = get_post_meta($post_id, $field['id'], true);     
+          $new = $_POST[$field['id']];     
+          if ($new && $new != $old) {     
+              update_post_meta($post_id, $field['id'], $new);  //更新数据   
+          } elseif ('' == $new && $old) {     
+              delete_post_meta($post_id, $field['id'], $old);  //如果为更新，则沿用之前字段中的数据   
+          }     
+      } // end foreach     
+  }     
+  add_action('save_post', 'mobile_save_custom_meta_box'); 
+
+
+/**
+*实验性质：添加psot-meta标签 -End
 */
 
 //移动主题导航菜单
