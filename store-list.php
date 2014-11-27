@@ -1,9 +1,13 @@
 <?php
 //后台加载相关菜单项
-function dw_store_list_page(){
-  add_menu_page("DW商城","DW商城",'manage_options','dw_store_list_page','dwstore_list_xml','dashicons-cart'); 
+if ( function_exists('dw_store_list_page') ) {
+	function dw_store_list_page(){
+  		add_menu_page("DW商城","DW商城",'manage_options','dw_store_list_page','dwstore_list_xml','dashicons-cart'); 
+	}
+	add_action('admin_menu','dw_store_list_page');
 }
-add_action('admin_menu','dw_store_list_page');
+
+if ( function_exists('get_dw_store_list') ) {
 
 define( 'store_list_cache_time', 864000); //10 day
 
@@ -77,4 +81,4 @@ function dwstore_list_xml(){
 </tbody>
 		</table>
 	</div>
-<?php }?>
+<?php }}?>
