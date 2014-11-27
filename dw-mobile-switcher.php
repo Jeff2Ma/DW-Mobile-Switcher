@@ -2,8 +2,8 @@
 /*
 Plugin Name: DW Mobile Switcher
 Plugin URI: http://Devework.com/
-Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2014.8.14)
-Version: 1.0
+Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2014.11.27)
+Version: 1.2
 Author: Jeff
 Author URI: http://Devework.com/
 @ Thanks to mg12’s WP Mobile themes plugin.
@@ -29,7 +29,7 @@ $prefix = 'mobile_';
     array(     
           'label'=> '外链特色图像',//标记label名
           'id'    => 'thumb',  //custom_text 为输入框标记唯一的id名  
-          'desc'  => '输入图片的url，支持外链。即可优先显示（不填亦可）',//输入框描述 
+          'desc'  => '[优先级1]输入图片的url，支持外链，即可优先显示（不填亦可，不填调用特色图像）',//输入框描述 
           'type'  => 'text' //选择输入类型   
       ),
     /*
@@ -64,13 +64,7 @@ echo '<input type="hidden" name="custom_meta_box_nonce" value="'.wp_create_nonce
                         // text    
     case 'text':     
         echo '<input type="text" name="'.$field['id'].'" id="'.$field['id'].'" value="'.$meta.'" size="30" />    
-            <br /><span class="description">'.$field['desc'].'</span>';     
-    break;     
-       
-        // textarea     
-    case 'textarea':     
-        echo '<textarea name="'.$field['id'].'" id="'.$field['id'].'" cols="60" rows="4">'.$meta.'</textarea>    
-            <br /><span class="description">'.$field['desc'].'</span>';     
+            <br /><span class="description">'.$field['desc'].'</span>'; 
     break;                                  
                 }    
         echo '</td></tr>';     
@@ -109,6 +103,16 @@ function mobile_save_custom_meta_box($post_id) {
   add_action('save_post', 'mobile_save_custom_meta_box'); 
 
 
+add_filter('admin_post_thumbnail_html', 'dwmobile_post_thumbnail_html',10,2);
+function dwmobile_post_thumbnail_html($content, $post_id){
+  $post = get_post($post_id);
+  $post_type = $post->post_type;
+  if($post_type == 'post'){
+    return $content.'<p>[优先级2]移动主题首页特色图像也从此处调用</p>';
+  }
+  return $content;
+}
+
 /**
 *实验性质：添加psot-meta标签 -End
 */
@@ -124,6 +128,11 @@ if (!isset($_COOKIE['return_desktop'])){
 
 //载入user-agent检测插件Mobile_Detect
 require_once 'Mobile_Detect.php';
+
+//载入user-agent检测插件Mobile_Detect
+require_once 'store-list.php';
+
+
 
 //执行主题切换函数
 class DWMobileSwitcher {
