@@ -2,8 +2,8 @@
 /*
 Plugin Name: DW Mobile Switcher
 Plugin URI: http://Devework.com/
-Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2014.11.27)
-Version: 1.2
+Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2015.02.14)
+Version: 1.3
 Author: Jeff
 Author URI: http://Devework.com/
 @ Thanks to mg12’s WP Mobile themes plugin.
@@ -159,7 +159,7 @@ class DWMobileSwitcher {
 		if (empty($theme)) {
 			return $template;
 		}
-		$theme = get_theme($theme);
+		$theme = wp_get_theme($theme);
 		if (empty($theme)) {
 			return $template;
 		}
@@ -175,7 +175,7 @@ class DWMobileSwitcher {
 		if (empty($theme)) {
 			return $stylesheet;
 		}
-		$theme = get_theme($theme);
+		$theme = wp_get_theme($theme);
 		//不显示非公开主题模板
 		if (isset($theme['Status']) && $theme['Status'] != 'publish') {
 			return $template;
@@ -191,11 +191,11 @@ class DWMobileSwitcher {
 $options = get_option('dw_mobile_switcher_options');
 $mobileThemeName = $options['mobile_theme'];
 if(!$mobileThemeName) {
-	$mobileThemeName = get_current_theme();
+	$mobileThemeName = wp_get_theme();
 }
 $tabletThemeName = $options['tablet_theme'];
 if(!$tabletThemeName) {
-	$tabletThemeName = get_current_theme();
+	$tabletThemeName = wp_get_theme();
 }
 new DWMobileSwitcher($mobileThemeName, $tabletThemeName);
 
@@ -343,7 +343,7 @@ class DWMobileSwitcherOptions {
 
 	/*return the name of themes*/
 	private function getThemeNames() {
-		$themes = get_themes();
+		$themes = wp_get_themes();
 		$themeNames = array_keys($themes);
 		natcasesort($themeNames);
 
@@ -352,7 +352,7 @@ class DWMobileSwitcherOptions {
 
 	/*return the name of default theme*/
 	private function getDefaultThemeName() {
-		$themeName = get_current_theme();
+		$themeName = wp_get_theme();
 		return $themeName;
 	}
 
