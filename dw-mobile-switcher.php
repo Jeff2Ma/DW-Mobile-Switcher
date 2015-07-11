@@ -2,8 +2,8 @@
 /*
 Plugin Name: DW Mobile Switcher
 Plugin URI: http://Devework.com/
-Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2015.02.14)
-Version: 1.3
+Description: DeveWork旗下移动主题专用主题（如DeveMobile）切换插件。(更新：2015.07.11)
+Version: 1.4
 Author: Jeff
 Author URI: http://Devework.com/
 @ Thanks to mg12’s WP Mobile themes plugin.
@@ -131,8 +131,6 @@ require_once 'Mobile_Detect.php';
 
 //载入user-agent检测插件Mobile_Detect
 require_once 'store-list.php';
-
-
 
 //执行主题切换函数
 class DWMobileSwitcher {
@@ -293,7 +291,7 @@ class DWMobileSwitcherOptions {
 											}
 										?>
 									<select>
-									<p class="description">手机主题将应用在 iPhone、iPod touch、Nexus、BlackBerry等手机和小型移动设备上。</p>
+									<p class="description">手机主题将应用在 iPhone、Nexus、SamSung、BlackBerry等手机和小型移动设备上。</p>
 								</td>
 							</tr>
 
@@ -316,7 +314,7 @@ class DWMobileSwitcherOptions {
 											}
 										?>
 									<select>
-									<p class="description">平板主题将应用在 iPad、Kindle、Nexus 平板、三星平板等平板设备上。</p>
+									<p class="description">平板主题将应用在iPad、iPad mini、Kindle、Nexus 平板、三星平板等平板设备上。</p>
 								</td>
 							</tr>
 
